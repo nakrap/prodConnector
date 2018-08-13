@@ -1,3 +1,3 @@
 module.exports = {
-  mongoURI: "mongodb://lookback:lookback1@ds119442.mlab.com:19442/lookback"
+  mongoURI: "mongodb://producer:producer1@ds119732.mlab.com:19732/prodconnector"
 };
