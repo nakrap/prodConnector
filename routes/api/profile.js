@@ -37,7 +37,71 @@ router.get(
   }
 );
 
-// Route =          GET api/profile
+// Route =          GET api/profile/all
+// Description =    Get all profiles
+// Access =         PUBLIC
+router.get("/all", (req, res) => {
+  const errors = {};
+
+  Profile.find()
+    .populate("user", ["name", "avatar"])
+    .then(profiles => {
+      if (!profiles) {
+        errors.noprofile = "There are no profiles.";
+        return res.status(404).json(errors);
+      }
+
+      res.json(profiles);
+    })
+    .catch(err =>
+      res.status(404).json({ noprofile: "There are no profiles." })
+    );
+});
+
+// Route =          GET api/profile/handle/:handle
+// Description =    Get profile by handle
+// Access =         PUBLIC
+router.get("/handle/:handle", (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ handle: req.params.handle })
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile =
+          "We are sorry, but it looks like there is no profile for this user...";
+        res.status(404).json(errors);
+      }
+      res.json(profile);
+    })
+    .catch(err => res.status(404).json(err));
+});
+
+// Route =          GET api/profile/user/:user_id
+// Description =    Get profile by user ID
+// Access =         PUBLIC
+router.get("/user/:user_id", (req, res) => {
+  const errors = {};
+
+  Profile.findOne({ user: req.params.user_id })
+    .populate("user", ["name", "avatar"])
+    .then(profile => {
+      if (!profile) {
+        errors.noprofile =
+          "We are sorry, but it looks like there is no profile for this user...";
+        res.status(404).json(errors);
+      }
+      res.json(profile);
+    })
+    .catch(err =>
+      res.status(404).json({
+        noprofile:
+          "We are sorry, but it looks like there is no profile for this user..."
+      })
+    );
+});
+
+// Route =          POST api/profile
 // Description =    Creates or edits a users profile
 // Access =         PRIVATE
 router.post(
